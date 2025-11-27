@@ -1,3 +1,4 @@
+import Script from "next/script";
 import type { Metadata } from "next";
 import { Syne, Manrope } from "next/font/google";
 import "./globals.css";
@@ -22,7 +23,6 @@ export const metadata: Metadata = {
     icon: "/icon.png",
   },
 };
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -30,6 +30,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <Script
+          defer
+          src="https://umami-three-wheat-87.vercel.app/script.js"
+          data-website-id="fab7b427-3542-473e-ae0f-f33d597afe24"
+          strategy="afterInteractive"
+        />
+      </head>
       <body
         className={`${syne.variable} ${manrope.variable} antialiased bg-background text-foreground`}
       >

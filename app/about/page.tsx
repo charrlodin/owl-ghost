@@ -63,6 +63,22 @@ export default function About() {
                             </p>
                         </motion.div>
 
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.5 }}
+                            className="space-y-4"
+                        >
+                            <h3 className="font-display text-3xl text-white">Legal</h3>
+                            <div className="flex gap-6 font-mono text-sm text-white/60">
+                                <a href="/privacy" className="hover:text-primary hover:underline">Privacy Policy</a>
+                                <a href="/terms" className="hover:text-primary hover:underline">Terms of Service</a>
+                            </div>
+                            <p className="font-mono text-sm text-white/60 mt-4">
+                                Support: <a href="mailto:support@owlghost.xyz" className="text-primary hover:underline">support@owlghost.xyz</a>
+                            </p>
+                        </motion.div>
+
                         <div className="pt-12 border-t border-white/10">
                             <p className="font-mono text-xs uppercase tracking-widest text-white/30">
                                 Built with Next.js, Convex, Clerk, & Tailwind.

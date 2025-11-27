@@ -8,8 +8,9 @@ import { Id } from "@/convex/_generated/dataModel";
 import { motion } from "framer-motion";
 
 
-export default function DownloadPage({ params }: { params: { id: string } }) {
-    const fileId = params.id as Id<"files">;
+export default function DownloadPage({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = use(params);
+    const fileId = id as Id<"files">;
 
     const fileInfo = useQuery(api.files.getFileInfo, { fileId });
     const getDownloadUrl = useMutation(api.files.getDownloadUrl);
@@ -62,9 +63,10 @@ export default function DownloadPage({ params }: { params: { id: string } }) {
             document.body.removeChild(a);
             URL.revokeObjectURL(downloadUrl);
 
-        } catch (err: any) {
+        } catch (err) {
             console.error(err);
-            setError(err.message || "Download failed");
+            const message = err instanceof Error ? err.message : "Download failed";
+            setError(message);
         } finally {
             setDownloading(false);
         }

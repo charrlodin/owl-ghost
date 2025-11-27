@@ -5,7 +5,6 @@ import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import Navigation from "@/components/Navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { motion, AnimatePresence } from "framer-motion";
 
 export default function Home() {
   const [file, setFile] = useState<File | null>(null);
@@ -13,7 +12,6 @@ export default function Home() {
   const [maxDownloads, setMaxDownloads] = useState<number | undefined>(undefined);
   const [password, setPassword] = useState("");
   const [uploading, setUploading] = useState(false);
-  const [progress, setProgress] = useState(0);
   const [shareUrl, setShareUrl] = useState<string | null>(null);
 
   const generateUploadUrl = useMutation(api.files.createUploadSession);
@@ -33,7 +31,6 @@ export default function Home() {
   const handleUpload = async () => {
     if (!file) return;
     setUploading(true);
-    setProgress(10);
 
     try {
       // 1. Generate E2EE Key
@@ -70,7 +67,6 @@ export default function Home() {
       if (!result.ok) throw new Error("Upload failed");
 
       const { storageId } = await result.json();
-      setProgress(80);
 
       // 6. Save Metadata
       const fileId = await saveFile({
@@ -83,7 +79,6 @@ export default function Home() {
         passwordHash,
       });
 
-      setProgress(100);
       // 7. Generate URL with Key in Hash
       setShareUrl(`${window.location.origin}/f/${fileId}#${keyStr}`);
     } catch (err) {

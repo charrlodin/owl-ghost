@@ -1,51 +1,58 @@
-# Welcome to your Convex + Next.js + Clerk app
+# OwlGhost 🦉👻
 
-This is a [Convex](https://convex.dev/) project created with [`npm create convex`](https://www.npmjs.com/package/create-convex).
+**Ephemeral, End-to-End Encrypted File Sharing.**
 
-After the initial setup (<2 minutes) you'll have a working full-stack app using:
+OwlGhost is a privacy-first file sharing application designed for the modern web. It features a "Neo-Brutalist" aesthetic, client-side encryption, and strict data expiration policies.
 
-- Convex as your backend (database, server logic)
-- [React](https://react.dev/) as your frontend (web page interactivity)
-- [Next.js](https://nextjs.org/) for optimized web hosting and page routing
-- [Tailwind](https://tailwindcss.com/) for building great looking accessible UI
-- [Clerk](https://clerk.com/) for authentication
+![OwlGhost](/public/owl-logo.png)
 
-## Get started
+## Features
 
-If you just cloned this codebase and didn't use `npm create convex`, run:
+-   **End-to-End Encryption (E2EE)**: Files are encrypted in the browser using `AES-GCM` (256-bit) before upload. The decryption key is part of the URL fragment (`#key`) and is **never** sent to the server.
+-   **Ephemeral Storage**: Files automatically expire after 1, 3, or 7 days.
+-   **Download Limits**: Set files to self-destruct after 1, 5, or 10 downloads.
+-   **Password Protection**: Optional password gating (hashed client-side).
+-   **Neo-Brutalist Design**: High-contrast, typographic-led UI with "The Split" layout topology.
+-   **Procedural Audio**: (Currently disabled, but architecture exists) Web Audio API integration for UI sounds.
 
-```
-npm install
-npm run dev
-```
+## Tech Stack
 
-If you're reading this README on GitHub and want to use this template, run:
+-   **Frontend**: Next.js 15 (App Router), React, Tailwind CSS, Framer Motion.
+-   **Backend**: Convex (Database, Functions, Cron Jobs).
+-   **Storage**: Convex Native Storage.
+-   **Auth**: Clerk.
+-   **Security**: Web Crypto API (SHA-256, AES-GCM).
 
-```
-npm create convex@latest -- -t nextjs-clerk
-```
+## Getting Started
 
-Then:
+1.  **Clone the repo**:
+    ```bash
+    git clone https://github.com/yourusername/owl-ghost.git
+    cd owl-ghost
+    ```
 
-1. Open your app. There should be a "Claim your application" button from Clerk in the bottom right of your app.
-2. Follow the steps to claim your application and link it to this app.
-3. Follow step 3 in the [Convex Clerk onboarding guide](https://docs.convex.dev/auth/clerk#get-started) to create a Convex JWT template.
-4. Uncomment the Clerk provider in `convex/auth.config.ts`
-5. Paste the Issuer URL as `CLERK_JWT_ISSUER_DOMAIN` to your dev deployment environment variable settings on the Convex dashboard (see [docs](https://docs.convex.dev/auth/clerk#configuring-dev-and-prod-instances))
+2.  **Install dependencies**:
+    ```bash
+    npm install
+    ```
 
-If you want to sync Clerk user data via webhooks, check out this [example repo](https://github.com/thomasballinger/convex-clerk-users-table/).
+3.  **Setup Environment**:
+    -   Run `npx convex dev` to initialize your Convex backend.
+    -   Setup Clerk authentication and add `CLERK_JWT_ISSUER_DOMAIN` to your Convex dashboard.
+    -   Add `NEXT_PUBLIC_CONVEX_URL` and `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` to `.env.local`.
 
-## Learn more
+4.  **Run the app**:
+    ```bash
+    npm run dev
+    ```
 
-To learn more about developing your project with Convex, check out:
+## Security Model
 
-- The [Tour of Convex](https://docs.convex.dev/get-started) for a thorough introduction to Convex principles.
-- The rest of [Convex docs](https://docs.convex.dev/) to learn about all Convex features.
-- [Stack](https://stack.convex.dev/) for in-depth articles on advanced topics.
+-   **Zero Knowledge**: The server stores encrypted blobs. It cannot read your files.
+-   **Key Management**: Keys are generated client-side and transferred via the URL hash. If you lose the link, the file is lost forever.
+-   **Sanitization**: Filenames are sanitized to prevent injection attacks.
+-   **Rate Limiting**: Uploads are rate-limited to prevent abuse.
 
-## Join the community
+## License
 
-Join thousands of developers building full-stack apps with Convex:
-
-- Join the [Convex Discord community](https://convex.dev/community) to get help in real-time.
-- Follow [Convex on GitHub](https://github.com/get-convex/), star and contribute to the open-source implementation of Convex.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

@@ -6,11 +6,13 @@ import Navigation from "@/components/Navigation";
 import { motion } from "framer-motion";
 import { RedirectToSignIn, SignedIn, SignedOut } from "@clerk/nextjs";
 
+import { Id } from "@/convex/_generated/dataModel";
+
 export default function Dashboard() {
     const files = useQuery(api.files.getUserFiles);
     const deleteFile = useMutation(api.files.deleteFile);
 
-    const handleDelete = async (fileId: any) => {
+    const handleDelete = async (fileId: Id<"files">) => {
         if (confirm("Are you sure you want to delete this file?")) {
             await deleteFile({ fileId });
         }
