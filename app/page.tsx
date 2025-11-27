@@ -5,7 +5,7 @@ import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import Navigation from "@/components/Navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { useGhostSound } from "@/hooks/use-ghost-sound";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function Home() {
   const [file, setFile] = useState<File | null>(null);
@@ -19,7 +19,6 @@ export default function Home() {
   const generateUploadUrl = useMutation(api.files.createUploadSession);
   const saveFile = useMutation(api.files.saveFile);
 
-  const { playHover, playClick, playSuccess, playError } = useGhostSound();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -87,10 +86,8 @@ export default function Home() {
       setProgress(100);
       // 7. Generate URL with Key in Hash
       setShareUrl(`${window.location.origin}/f/${fileId}#${keyStr}`);
-      playSuccess();
     } catch (err) {
       console.error(err);
-      playError();
       alert("Upload failed. Please try again.");
     } finally {
       setUploading(false);
@@ -162,9 +159,8 @@ export default function Home() {
               >
                 {!file ? (
                   <div
-                    onClick={() => { playClick(); fileInputRef.current?.click(); }}
+                    onClick={() => { fileInputRef.current?.click(); }}
                     className="h-full flex flex-col items-center justify-center cursor-pointer group"
-                    onMouseEnter={playHover}
                   >
                     <div className="w-24 h-24 border border-white/20 rounded-full flex items-center justify-center group-hover:scale-110 group-hover:border-primary transition-all duration-500">
                       <span className="text-4xl font-light text-white group-hover:text-primary transition-colors">+</span>
@@ -179,7 +175,7 @@ export default function Home() {
                       <h3 className="font-display text-3xl truncate">{file.name}</h3>
                       <div className="flex justify-between items-center mt-2">
                         <span className="font-mono text-xs text-white/50">{(file.size / 1024 / 1024).toFixed(2)} MB</span>
-                        <button onClick={() => { playClick(); setFile(null); }} className="text-xs uppercase text-red-500 hover:text-red-400" onMouseEnter={playHover}>Clear</button>
+                        <button onClick={() => { setFile(null); }} className="text-xs uppercase text-red-500 hover:text-red-400">Clear</button>
                       </div>
                     </div>
 
@@ -190,14 +186,13 @@ export default function Home() {
                           {[1, 3, 7].map((days) => (
                             <button
                               key={days}
-                              onClick={() => { playClick(); setExpiry(days * 24 * 60 * 60 * 1000); }}
+                              onClick={() => { setExpiry(days * 24 * 60 * 60 * 1000); }}
                               className={`
                                 py-3 border text-xs font-mono uppercase transition-all
                                 ${expiry === days * 24 * 60 * 60 * 1000
                                   ? 'border-primary text-primary bg-primary/10'
                                   : 'border-white/10 text-white/40 hover:border-white/30'}
                               `}
-                              onMouseEnter={playHover}
                             >
                               {days} Day{days > 1 ? 's' : ''}
                             </button>
@@ -211,14 +206,13 @@ export default function Home() {
                           {['unlimited', 1, 5, 10].map((opt) => (
                             <button
                               key={opt}
-                              onClick={() => { playClick(); setMaxDownloads(opt === 'unlimited' ? undefined : Number(opt)); }}
+                              onClick={() => { setMaxDownloads(opt === 'unlimited' ? undefined : Number(opt)); }}
                               className={`
                                 py-3 border text-xs font-mono uppercase transition-all
                                 ${maxDownloads === (opt === 'unlimited' ? undefined : Number(opt))
                                   ? 'border-primary text-primary bg-primary/10'
                                   : 'border-white/10 text-white/40 hover:border-white/30'}
                               `}
-                              onMouseEnter={playHover}
                             >
                               {opt === 'unlimited' ? '∞' : opt}
                             </button>
@@ -239,10 +233,9 @@ export default function Home() {
                     </div>
 
                     <button
-                      onClick={() => { playClick(); handleUpload(); }}
+                      onClick={() => { handleUpload(); }}
                       disabled={uploading}
                       className="w-full bg-white text-black font-bold uppercase tracking-widest py-4 hover:bg-primary transition-colors disabled:opacity-50 mt-8"
-                      onMouseEnter={playHover}
                     >
                       {uploading ? "Uploading..." : "Initiate Upload"}
                     </button>

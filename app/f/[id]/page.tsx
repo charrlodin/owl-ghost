@@ -7,7 +7,6 @@ import Navigation from "@/components/Navigation";
 import { Id } from "@/convex/_generated/dataModel";
 import { motion } from "framer-motion";
 
-import { useGhostSound } from "@/hooks/use-ghost-sound";
 
 export default function DownloadPage({ params }: { params: { id: string } }) {
     const fileId = params.id as Id<"files">;
@@ -19,7 +18,6 @@ export default function DownloadPage({ params }: { params: { id: string } }) {
     const [downloading, setDownloading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const { playHover, playClick, playSuccess, playError } = useGhostSound();
 
     const handleDownload = async () => {
         setDownloading(true);
@@ -63,12 +61,10 @@ export default function DownloadPage({ params }: { params: { id: string } }) {
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(downloadUrl);
-            playSuccess();
 
         } catch (err: any) {
             console.error(err);
             setError(err.message || "Download failed");
-            playError();
         } finally {
             setDownloading(false);
         }
@@ -137,10 +133,9 @@ export default function DownloadPage({ params }: { params: { id: string } }) {
                                 )}
 
                                 <button
-                                    onClick={() => { playClick(); handleDownload(); }}
+                                    onClick={() => { handleDownload(); }}
                                     disabled={downloading}
                                     className="w-full bg-primary text-black font-bold uppercase py-4 text-xl hover:bg-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                                    onMouseEnter={playHover}
                                 >
                                     {downloading ? "Downloading..." : "Download"}
                                 </button>

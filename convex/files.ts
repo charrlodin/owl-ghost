@@ -1,24 +1,45 @@
+import { v } from "convex/values";
+import { mutation, query } from "./_generated/server";
 import { checkRateLimit } from "./rateLimit";
 
-// ... imports
+// Helper to check if file is expired
+const isExpired = (file: any) => {
+    const now = Date.now();
+    if (file.status === "expired") return true;
+    if (file.expiresAt < now) return true;
+    if (file.maxDownloads !== undefined && file.maxDownloads !== null && file.downloadCount >= file.maxDownloads) return true;
+    return false;
+};
 
-// ... inside handler
-if (userId) {
-    await checkRateLimit(ctx, {
-        key: userId,
-        maxRequests: 20,
-        windowMs: 60 * 60 * 1000, // 1 hour
-    });
-}
+export const createUploadSession = mutation({
+    args: {
+        fileName: v.string(),
+        fileSize: v.number(),
+        mimeType: v.string(),
+        expiryDurationMs: v.number(),
+        maxDownloads: v.optional(v.number()),
+        passwordHash: v.optional(v.string()),
+    },
+    handler: async (ctx, args) => {
+        const identity = await ctx.auth.getUserIdentity();
+        const userId = identity?.subject;
 
-// 2. Filename Sanitization
-// Remove any non-alphanumeric chars except dots, dashes, underscores
-const sanitizedFileName = args.fileName.replace(/[^a-zA-Z0-9._-]/g, "");
-if (sanitizedFileName.length === 0) throw new Error("Invalid filename");
+        // 1. Rate Limiting
+        if (userId) {
+            await checkRateLimit(ctx, {
+                key: userId,
+                maxRequests: 20,
+                windowMs: 60 * 60 * 1000, // 1 hour
+            });
+        }
 
-const uploadUrl = await ctx.storage.generateUploadUrl();
+        // 2. Filename Sanitization
+        const sanitizedFileName = args.fileName.replace(/[^a-zA-Z0-9._-]/g, "");
+        if (sanitizedFileName.length === 0) throw new Error("Invalid filename");
 
-return uploadUrl;
+        const uploadUrl = await ctx.storage.generateUploadUrl();
+
+        return uploadUrl;
     },
 });
 
